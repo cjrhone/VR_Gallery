@@ -29,6 +29,18 @@
         document.body.appendChild(renderer.domElement);
         //renderer.domElement is where the renderer draws its output
 
+        // Update viewport on resize
+        window.addEventListener('resize', function()
+        {
+            var width = window.innerWidth;
+            var height = window.innerHeight;
+            renderer.setSize( width, height );
+            // Updates aspect ratio
+            camera.aspect = width / height;
+            // method that must be called after any parameters change 
+            camera.updateProjectionMatrix();
+        });
+
         // create the shape
         var geometry = new THREE.BoxGeometry( 1, 1, 1 );
 
