@@ -1,0 +1,71 @@
+<html>
+
+<head>
+    <title>Three.js Crash Course</title>
+    <style>
+        body 
+        {
+            margin: 0;
+        }
+
+        canvas 
+        {
+            width: 100%;
+            height: 100%
+        }
+    </style>
+</head>
+
+<body>
+    <script src="js/three.js"></script>
+
+    <script>
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+        // THREE.PerspectiveCamera ( fov, aspect ratio, near, far )
+
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        //renderer.domElement is where the renderer draws its output
+
+        // create the shape
+        var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+
+        // create a material, color or image texture
+        var material = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, wireframe: true, })
+        var cube = new THREE.Mesh( geometry, material );
+        scene.add( cube );
+
+        camera.position.z = 3;
+
+
+
+        // game logic
+        var update = function () 
+        {
+            cube.rotation.x += 0.01;
+            cube.rotation.y += 0.01;
+
+        };
+        // draw Scene
+        var render = function () 
+        {
+            renderer.render(scene, camera)
+        }
+        // run Game Loop ( update, render, repeat ) -- in the future learn to process user input
+        var GameLoop = function () 
+        {
+            requestAnimationFrame(GameLoop);
+            //allows us to run every frame
+
+            update();
+            render();
+        };
+
+        GameLoop();
+
+    </script>
+</body>
+
+</html>
