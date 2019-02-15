@@ -48,6 +48,10 @@
         // create the shape
         var geometry = new THREE.BoxGeometry( 1, 1, 1 );
 
+        var room = new THREE.BoxGeometry( 25, 25, 25 );
+
+        var test = new THREE.BoxGeometry( 1, 1, 1 );
+
          // create a material, color or image texture
 
         // TEXTURES -- REQUIRES HOSTING
@@ -62,18 +66,39 @@
         // ];
         //var material = new THREE.MeshFaceMaterial( cubeMaterials );
 
-        var material = new THREE.MeshPhongMaterial({ color: 0x0000FF, wireframe: false, })
+        var cubeMaterials = 
+        [
+            new THREE.MeshPhongMaterial({ color: 0x0000FF, side: THREE.DoubleSide } ),
+            new THREE.MeshPhongMaterial({ color: 0x0000FF, side: THREE.DoubleSide } ),
+            new THREE.MeshPhongMaterial({ color: 0x0000FF, side: THREE.DoubleSide } ),
+            new THREE.MeshPhongMaterial({ color: 0x0000FF, side: THREE.DoubleSide } ),
+            new THREE.MeshPhongMaterial({ color: 0x0000FF, side: THREE.DoubleSide } ),
+            new THREE.MeshPhongMaterial({ color: 0x0000FF, side: THREE.DoubleSide } )
+        ];
+
+        var material = new THREE.MeshFaceMaterial( cubeMaterials );
+
         var cube = new THREE.Mesh( geometry, material );
         scene.add( cube );
 
+        var cube2 = new THREE.Mesh( test, material );
+        scene.add( cube2 );
+        cube2.position.y = 2;
+
+        // Lights
+        var ambientLight = new THREE.AmbientLight( 0xFFFFFF, 1 );
+        scene.add( ambientLight );
+
+        var light1 = new THREE.PointLight( 0xff0040, 4.2, 500 );
+        scene.add( light1 );
+
+        var light2 = new THREE.PointLight( 0x0040ff, 4.1, 500 );
+        scene.add( light2 );
+
+        var light3 = new THREE.PointLight( 0x80ff80, 4.05, 500 );
+        scene.add( light3 );
+
         camera.position.z = 3;
-
-        // var ambientLight = new THREE.AmbientLight( 0xFFFFFF, 0.8 );
-        // scene.add( ambientLight );
-
-        var light = new THREE.DirectionalLight( 0xff0000, 15, 1000 );
-        light.position.set( 50, 50, 50 );
-        scene.add( light );
 
        
 
@@ -81,8 +106,23 @@
         // game logic
         var update = function () 
         {
-            cube.rotation.x += 0.01;
-            cube.rotation.y += 0.01;
+
+            var time = Date.now() * 0.0005;
+
+            light1.position.x = Math.sin( time * 0.7 ) * 30;
+            light1.position.y = Math.cos( time * 0.5 ) * 40;
+            light1.position.z = Math.cos( time * 0.3 ) * 30;
+
+            light2.position.x = Math.sin( time * 0.3 ) * 30;
+            light2.position.y = Math.sin( time * 0.5 ) * 40;
+            light2.position.z = Math.sin( time * 0.7 ) * 30;
+
+            light3.position.x = Math.sin( time * 0.7 ) * 30;
+            light3.position.y = Math.cos( time * 0.7 ) * 40;
+            light3.position.z = Math.sin( time * 0.7 ) * 30;
+
+            // cube.rotation.x += 0.01;
+            // cube.rotation.y += 0.01;
 
         };
         // draw Scene
