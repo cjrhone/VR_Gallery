@@ -61,13 +61,21 @@
         //     new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader().load('img/cj.jpg'), side: THREE.DoubleSide } ) // BACK
         // ];
         //var material = new THREE.MeshFaceMaterial( cubeMaterials );
-        
-        var material = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, wireframe: true, })
+
+        var material = new THREE.MeshPhongMaterial({ color: 0x0000FF, wireframe: false, })
         var cube = new THREE.Mesh( geometry, material );
         scene.add( cube );
 
         camera.position.z = 3;
 
+        // var ambientLight = new THREE.AmbientLight( 0xFFFFFF, 0.8 );
+        // scene.add( ambientLight );
+
+        var light = new THREE.DirectionalLight( 0xff0000, 15, 1000 );
+        light.position.set( 50, 50, 50 );
+        scene.add( light );
+
+       
 
 
         // game logic
