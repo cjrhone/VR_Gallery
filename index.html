@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>three.js - pointerlock controls</title>
+		<title>VR_Gallery</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<style>
@@ -240,39 +240,98 @@
 				var floor = new THREE.Mesh( floorGeometry, floorMaterial );
 				scene.add( floor );
 
-				// objects
+				// EXPERIMENTAL FUNCTIONS
+				var timer = Date.now() * 0.0001
 
-				var boxGeometry = new THREE.BoxBufferGeometry( 20, 20, 20 );
-				boxGeometry = boxGeometry.toNonIndexed(); // ensure each face has unique vertices
+				// CREATE OBJECTS
 
-				position = boxGeometry.attributes.position;
-				colors = [];
+				var southWall = new THREE.PlaneBufferGeometry( 300, 120, 20 );
+				var northWall = new THREE.PlaneBufferGeometry( 300, 120, 20 );
+				var westWall = new THREE.PlaneBufferGeometry( 300, 120, 20 );
 
-				for ( var i = 0, l = position.count; i < l; i ++ ) {
+				// CREATE MATERIALS
+				var wallMaterial = new THREE.MeshPhongMaterial({ color: 0xE6E6FA, specular:0x000000, side: THREE.DoubleSide })
 
-					color.setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-					colors.push( color.r, color.g, color.b );
 
-				}
+				// CREATE MESH
+				var S_Wall = new THREE.Mesh( southWall, wallMaterial );
+				var N_Wall = new THREE.Mesh( northWall, wallMaterial );
+				var W_Wall = new THREE.Mesh( westWall, wallMaterial );
 
-				boxGeometry.addAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
+				// REPOSITION
 
-				for ( var i = 0; i < 500; i ++ ) {
+				S_Wall.position.set(-10,10,150);
+				N_Wall.position.set(-10, 10, -150);
+				W_Wall.position.set(-160, 10, 0);
+				W_Wall.rotation.y = Math.PI / 2;
 
-					var boxMaterial = new THREE.MeshPhongMaterial( { specular: 0xffffff, flatShading: true, vertexColors: THREE.VertexColors } );
-					boxMaterial.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
 
-					var box = new THREE.Mesh( boxGeometry, boxMaterial );
-					box.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
-					box.position.y = Math.floor( Math.random() * 20 ) * 20 + 10;
-					box.position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
+				// SCENE ADD
+				scene.add( S_Wall );
+				scene.add( N_Wall );
+				scene.add( W_Wall );
 
-					scene.add( box );
-					objects.push( box );
+				
 
-				}
 
-				//
+
+
+
+
+				// ARRAY OF OBJECTS
+
+				// var boxGeometry = new THREE.BoxBufferGeometry( 20, 20, 20 );
+				// boxGeometry = boxGeometry.toNonIndexed(); // ensure each face has unique vertices
+
+				// var boxGeometry2 = new THREE.BoxBufferGeometry( 50, 50, 50 )
+
+				// var boxMaterial2 = new THREE.MeshPhongMaterial( {specular: 0xFF0000, flatShading: true, vertexColors: THREE.VertexColors} )
+				// boxMaterial2.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+
+				// var box2 = new THREE.Mesh( boxGeometry2, boxMaterial2 );
+
+				// scene.add(box2);
+				// objects.push(box2);
+
+				// position = boxGeometry.attributes.position;
+				// colors = [];
+
+				// for ( var i = 0, l = position.count; i < l; i ++ ) {
+
+				// 	color.setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+				// 	colors.push( color.r, color.g, color.b );
+
+				// }
+
+				// boxGeometry.addAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
+				// boxGeometry2.addAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
+
+				// for ( var i = 0; i < 100; i ++ ) {
+
+				// 	var boxMaterial = new THREE.MeshPhongMaterial( { specular: 0xffffff, flatShading: true, vertexColors: THREE.VertexColors } );
+				// 	boxMaterial.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+
+					// var boxMaterial2 = new THREE.MeshPhongMaterial( {specular: 0xFF0000, flatShading: true, vertexColors: THREE.VertexColors} )
+					// boxMaterial2.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+
+					// var box = new THREE.Mesh( boxGeometry, boxMaterial );
+					// var box2 = new THREE.Mesh( boxGeometry2, boxMaterial2 );
+					// box.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
+					// box.position.y = Math.floor( Math.random() * 20 ) * 20 + 10;
+					// box.position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
+
+					// box2.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
+					// box2.position.y = Math.floor( Math.random() * 20 ) * 20 + 10;
+					// box2.position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
+
+					// scene.add( box );
+					// scene.add( box2 );
+					// objects.push( box );
+					// objects.push( box2 );
+
+				// }
+
+				// END OF OBJECTS ARRAY
 
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
 				renderer.setPixelRatio( window.devicePixelRatio );
