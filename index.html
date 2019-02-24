@@ -245,9 +245,13 @@
 
 				// CREATE OBJECTS
 
-				var southWall = new THREE.PlaneBufferGeometry( 300, 120, 20 );
-				var northWall = new THREE.PlaneBufferGeometry( 300, 120, 20 );
-				var westWall = new THREE.PlaneBufferGeometry( 300, 120, 20 );
+				var southWall = new THREE.PlaneBufferGeometry( 300, 120, 1 );
+				var northWall = new THREE.PlaneBufferGeometry( 300, 120, 1 );
+				var westWall = new THREE.PlaneBufferGeometry( 200, 120, 1 );
+				var eastWall = new THREE.PlaneBufferGeometry( 200, 120, 1 );
+				var dividerOne = new THREE.PlaneBufferGeometry( 130, 50, 1);
+				var dividerTwo = new THREE.PlaneBufferGeometry( 130, 50, 1);
+
 
 				// CREATE MATERIALS
 				var wallMaterial = new THREE.MeshPhongMaterial({ color: 0xE6E6FA, specular:0x000000, side: THREE.DoubleSide })
@@ -257,19 +261,35 @@
 				var S_Wall = new THREE.Mesh( southWall, wallMaterial );
 				var N_Wall = new THREE.Mesh( northWall, wallMaterial );
 				var W_Wall = new THREE.Mesh( westWall, wallMaterial );
+				var E_Wall = new THREE.Mesh( eastWall, wallMaterial );
+				var Divider1 = new THREE.Mesh( dividerOne, wallMaterial);
+				var Divider2 = new THREE.Mesh( dividerTwo, wallMaterial);
+
+
 
 				// REPOSITION
 
-				S_Wall.position.set(-10,10,150);
-				N_Wall.position.set(-10, 10, -150);
-				W_Wall.position.set(-160, 10, 0);
+				S_Wall.position.set(0,10,50);
+				N_Wall.position.set(0, 10, -150);
+				W_Wall.position.set(-150, 10, -50);
 				W_Wall.rotation.y = Math.PI / 2;
+				E_Wall.position.set(150, 10, -50);
+				E_Wall.rotation.y = Math.PI / 2;
+				
+				Divider1.position.set(50, 20, -15);
+				Divider1.rotation.y = Math.PI / 2;
+
+				Divider2.position.set(-50, 20, -15);
+				Divider2.rotation.y = Math.PI / 2;
 
 
 				// SCENE ADD
 				scene.add( S_Wall );
 				scene.add( N_Wall );
 				scene.add( W_Wall );
+				scene.add( E_Wall );
+				scene.add( Divider1 );
+				scene.add( Divider2 );
 
 				
 
