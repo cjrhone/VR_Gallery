@@ -202,7 +202,7 @@
 
 				// floor
 
-				var floorGeometry = new THREE.PlaneBufferGeometry( 1000, 1000, 50, 50 );
+				var floorGeometry = new THREE.PlaneBufferGeometry( 300, 300, 50, 50 );
 				floorGeometry.rotateX( - Math.PI / 2 );
 
 				// vertex displacement
@@ -256,12 +256,19 @@
 				var artTwo = new THREE.BoxBufferGeometry( 48, 27, 0.5);
 				var artThree = new THREE.BoxBufferGeometry( 48, 27, 0.5);
 
+				var ceilingGeometry = new THREE.PlaneBufferGeometry( 300, 250, 50, 50 );
+
+				var cylinderGeometry = new THREE.CylinderGeometry( 2, 2, 5, 15 );
+				
+
 
 
 
 				// CREATE MATERIALS
 				var wallMaterial = new THREE.MeshPhongMaterial({ color: 0xE6E6FA, specular:0x000000, side: THREE.DoubleSide })
 				var artMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, specular:0xffffff, side: THREE.DoubleSide })
+				var ceilingMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, specular:0xffffff, side: THREE.DoubleSide })
+				var cylinderMaterial = new THREE.MeshBasicMaterial( {color: 0xffff00} );
 
 
 				// CREATE MESH
@@ -275,6 +282,11 @@
 				var ArtOne = new THREE.Mesh( artOne, artMaterial );
 				var ArtTwo = new THREE.Mesh( artTwo, artMaterial );
 				var ArtThree = new THREE.Mesh( artThree, artMaterial );
+
+				var Ceiling = new THREE.Mesh( ceilingGeometry, ceilingMaterial);
+
+				var Cylinder = new THREE.Mesh( cylinderGeometry, cylinderMaterial );
+
 
 
 
@@ -293,9 +305,15 @@
 				Divider2.position.set(-50, 20, -15);
 				Divider2.rotation.y = Math.PI / 2;
 
-				ArtOne.position.set(0,25,-149.5);
-				ArtTwo.position.set(100,25,-149.5);
+				ArtOne.position.set(0,25,-149.2);
+				ArtTwo.position.set(100,25,-149.3);
 				ArtThree.position.set(-100,25,-149.5);
+
+				Ceiling.position.set(0, 110, -50)
+				Ceiling.rotateX( - Math.PI / 2 );
+
+				Cylinder.position.set(15,3,-20);
+				Cylinder.rotateX( - Math.PI / 2 * timer );
 
 
 
@@ -309,6 +327,9 @@
 				scene.add( ArtOne );
 				scene.add( ArtTwo );
 				scene.add( ArtThree );
+				scene.add( Ceiling );
+				scene.add( Cylinder );
+
 
 
 				
