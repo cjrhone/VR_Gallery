@@ -202,24 +202,24 @@
 
 				// floor
 
-				var floorGeometry = new THREE.PlaneBufferGeometry( 2000, 2000, 100, 100 );
+				var floorGeometry = new THREE.PlaneBufferGeometry( 1000, 1000, 50, 50 );
 				floorGeometry.rotateX( - Math.PI / 2 );
 
 				// vertex displacement
 
-				var position = floorGeometry.attributes.position;
+				// var position = floorGeometry.attributes.position;
 
-				for ( var i = 0, l = position.count; i < l; i ++ ) {
+				// for ( var i = 0, l = position.count; i < l; i ++ ) {
 
-					vertex.fromBufferAttribute( position, i );
+				// 	vertex.fromBufferAttribute( position, i );
 
-					vertex.x += Math.random() * 20 - 10;
-					vertex.y += Math.random() * 2;
-					vertex.z += Math.random() * 20 - 10;
+				// 	vertex.x += Math.random() * 20 - 10;
+				// 	vertex.y += Math.random() * 2;
+				// 	vertex.z += Math.random() * 20 - 10;
 
-					position.setXYZ( i, vertex.x, vertex.y, vertex.z );
+				// 	position.setXYZ( i, vertex.x, vertex.y, vertex.z );
 
-				}
+				// }
 
 				floorGeometry = floorGeometry.toNonIndexed(); // ensure each face has unique vertices
 
@@ -245,16 +245,23 @@
 
 				// CREATE OBJECTS
 
-				var southWall = new THREE.PlaneBufferGeometry( 300, 120, 1 );
-				var northWall = new THREE.PlaneBufferGeometry( 300, 120, 1 );
-				var westWall = new THREE.PlaneBufferGeometry( 200, 120, 1 );
-				var eastWall = new THREE.PlaneBufferGeometry( 200, 120, 1 );
+				var southWall = new THREE.PlaneBufferGeometry( 300, 200, 1 );
+				var northWall = new THREE.PlaneBufferGeometry( 300, 200, 1 );
+				var westWall = new THREE.PlaneBufferGeometry( 200, 200, 1 );
+				var eastWall = new THREE.PlaneBufferGeometry( 200, 200, 1 );
 				var dividerOne = new THREE.PlaneBufferGeometry( 130, 50, 1);
 				var dividerTwo = new THREE.PlaneBufferGeometry( 130, 50, 1);
+
+				var artOne = new THREE.BoxBufferGeometry( 48, 27, 0.5);
+				var artTwo = new THREE.BoxBufferGeometry( 48, 27, 0.5);
+				var artThree = new THREE.BoxBufferGeometry( 48, 27, 0.5);
+
+
 
 
 				// CREATE MATERIALS
 				var wallMaterial = new THREE.MeshPhongMaterial({ color: 0xE6E6FA, specular:0x000000, side: THREE.DoubleSide })
+				var artMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, specular:0xffffff, side: THREE.DoubleSide })
 
 
 				// CREATE MESH
@@ -264,6 +271,11 @@
 				var E_Wall = new THREE.Mesh( eastWall, wallMaterial );
 				var Divider1 = new THREE.Mesh( dividerOne, wallMaterial);
 				var Divider2 = new THREE.Mesh( dividerTwo, wallMaterial);
+
+				var ArtOne = new THREE.Mesh( artOne, artMaterial );
+				var ArtTwo = new THREE.Mesh( artTwo, artMaterial );
+				var ArtThree = new THREE.Mesh( artThree, artMaterial );
+
 
 
 
@@ -278,9 +290,13 @@
 				
 				Divider1.position.set(50, 20, -15);
 				Divider1.rotation.y = Math.PI / 2;
-
 				Divider2.position.set(-50, 20, -15);
 				Divider2.rotation.y = Math.PI / 2;
+
+				ArtOne.position.set(0,25,-149.5);
+				ArtTwo.position.set(100,25,-149.5);
+				ArtThree.position.set(-100,25,-149.5);
+
 
 
 				// SCENE ADD
@@ -290,6 +306,10 @@
 				scene.add( E_Wall );
 				scene.add( Divider1 );
 				scene.add( Divider2 );
+				scene.add( ArtOne );
+				scene.add( ArtTwo );
+				scene.add( ArtThree );
+
 
 				
 
