@@ -221,29 +221,27 @@
 
 				// }
 
-				floorGeometry = floorGeometry.toNonIndexed(); // ensure each face has unique vertices
+				// floorGeometry = floorGeometry.toNonIndexed(); // ensure each face has unique vertices
 
-				position = floorGeometry.attributes.position;
-				var colors = [];
+				// position = floorGeometry.attributes.position;
+				// var colors = [];
 
-				for ( var i = 0, l = position.count; i < l; i ++ ) {
+				// for ( var i = 0, l = position.count; i < l; i ++ ) {
 
-					color.setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-					colors.push( color.r, color.g, color.b );
+				// 	color.setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+				// 	colors.push( color.r, color.g, color.b );
 
-				}
+				// }
 
-				floorGeometry.addAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
-
-				var floorMaterial = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
-
-				var floor = new THREE.Mesh( floorGeometry, floorMaterial );
-				scene.add( floor );
+				// floorGeometry.addAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
 
 				// EXPERIMENTAL FUNCTIONS
 				var timer = Date.now() * 0.0001
 
 				// CREATE OBJECTS
+
+				var floorMaterial = new THREE.MeshPhongMaterial({ color: 0xD3D3D3, specular:0xffffff, side: THREE.DoubleSide })
+				var ceilingGeometry = new THREE.PlaneBufferGeometry( 300, 250, 50, 50 );
 
 				var southWall = new THREE.PlaneBufferGeometry( 300, 200, 1 );
 				var northWall = new THREE.PlaneBufferGeometry( 300, 200, 1 );
@@ -255,10 +253,14 @@
 				var artOne = new THREE.BoxBufferGeometry( 48, 27, 0.5);
 				var artTwo = new THREE.BoxBufferGeometry( 48, 27, 0.5);
 				var artThree = new THREE.BoxBufferGeometry( 48, 27, 0.5);
-
-				var ceilingGeometry = new THREE.PlaneBufferGeometry( 300, 250, 50, 50 );
+				var artShader = new THREE.BoxBufferGeometry( 20, 10, 0.5);
 
 				var cylinderGeometry = new THREE.CylinderGeometry( 2, 2, 5, 15 );
+
+				var screenGeometry = new THREE.BoxBufferGeometry( 8, 4.5, 0.5);
+				var boxGeometry = new THREE.BoxBufferGeometry( 10, 5, 15);
+
+
 				
 
 
@@ -268,10 +270,16 @@
 				var wallMaterial = new THREE.MeshPhongMaterial({ color: 0xE6E6FA, specular:0x000000, side: THREE.DoubleSide })
 				var artMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, specular:0xffffff, side: THREE.DoubleSide })
 				var ceilingMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, specular:0xffffff, side: THREE.DoubleSide })
-				var cylinderMaterial = new THREE.MeshBasicMaterial( {color: 0xffff00} );
-
+				var cylinderMaterial = new THREE.MeshPhongMaterial( {color: 0xffffff} );
+				var screenMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, specular:0xffffff, side: THREE.DoubleSide })
+				var boxMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, specular: 0xffffff, side: THREE.DoubleSide })
 
 				// CREATE MESH
+
+				var floor = new THREE.Mesh( floorGeometry, floorMaterial );
+				var Ceiling = new THREE.Mesh( ceilingGeometry, ceilingMaterial);
+
+
 				var S_Wall = new THREE.Mesh( southWall, wallMaterial );
 				var N_Wall = new THREE.Mesh( northWall, wallMaterial );
 				var W_Wall = new THREE.Mesh( westWall, wallMaterial );
@@ -282,10 +290,22 @@
 				var ArtOne = new THREE.Mesh( artOne, artMaterial );
 				var ArtTwo = new THREE.Mesh( artTwo, artMaterial );
 				var ArtThree = new THREE.Mesh( artThree, artMaterial );
-
-				var Ceiling = new THREE.Mesh( ceilingGeometry, ceilingMaterial);
+				var ArtShader = new THREE.Mesh( artShader, artMaterial );
 
 				var Cylinder = new THREE.Mesh( cylinderGeometry, cylinderMaterial );
+				var WelcomeScreen = new THREE.Mesh( screenGeometry, screenMaterial);
+
+				var DisplayBoxSquare = new THREE.Mesh( boxGeometry, boxMaterial );
+				var DisplayBoxEffect1 = new THREE.Mesh( boxGeometry, boxMaterial );
+				var DisplayBoxEffect2 = new THREE.Mesh( boxGeometry, boxMaterial );
+				var DisplayBoxKinect = new THREE.Mesh( boxGeometry, boxMaterial );
+				var DisplayBoxMaterials = new THREE.Mesh( boxGeometry, boxMaterial );
+				var DisplayBoxMorph = new THREE.Mesh( boxGeometry, boxMaterial );
+				var DisplayBoxSit = new THREE.Mesh( boxGeometry, boxMaterial );
+				var DisplayBoxCloth = new THREE.Mesh( boxGeometry, boxMaterial );
+
+
+				
 
 
 
@@ -308,16 +328,47 @@
 				ArtOne.position.set(0,25,-149.2);
 				ArtTwo.position.set(100,25,-149.3);
 				ArtThree.position.set(-100,25,-149.5);
+				ArtShader.position.set(49.5, 15, 0);
+				ArtShader.rotation.y = Math.PI / 2;
 
 				Ceiling.position.set(0, 110, -50)
 				Ceiling.rotateX( - Math.PI / 2 );
 
 				Cylinder.position.set(15,3,-20);
-				Cylinder.rotateX( - Math.PI / 2 * timer );
+				WelcomeScreen.position.set(15,8,-20);
+				WelcomeScreen.rotateX( -Math.PI / 6);
+
+				DisplayBoxSquare.position.set(-44,3,-10)
+				DisplayBoxEffect1.position.set(56,3,-25) 
+				DisplayBoxEffect2.position.set(144,3,-80)
+				DisplayBoxKinect.rotateY( - Math.PI / 2); 
+				DisplayBoxKinect.position.set(100,3,44)  
+				DisplayBoxMaterials.position.set(-56,3,-35)
+				DisplayBoxMorph.position.set(-144,3,-90)
+				DisplayBoxSit.position.set(-144,3,-20)
+				DisplayBoxCloth.position.set(-100, 3, 44)
+				DisplayBoxCloth.rotateY( - Math.PI / 2); 
+
+			
+
+
 
 
 
 				// SCENE ADD
+				
+				scene.add(DisplayBoxSquare);
+				scene.add(DisplayBoxEffect1);
+				scene.add(DisplayBoxEffect2);
+				scene.add(DisplayBoxKinect);
+				scene.add(DisplayBoxMaterials);
+				scene.add(DisplayBoxMorph);
+				scene.add(DisplayBoxSit);
+				scene.add(DisplayBoxCloth);
+
+
+
+				scene.add( floor );
 				scene.add( S_Wall );
 				scene.add( N_Wall );
 				scene.add( W_Wall );
@@ -327,8 +378,10 @@
 				scene.add( ArtOne );
 				scene.add( ArtTwo );
 				scene.add( ArtThree );
+				scene.add( ArtShader );
 				scene.add( Ceiling );
 				scene.add( Cylinder );
+				scene.add( WelcomeScreen );
 
 
 
@@ -403,6 +456,8 @@
 
 				window.addEventListener( 'resize', onWindowResize, false );
 
+				
+
 			}
 
 			function onWindowResize() {
@@ -448,6 +503,7 @@
 						canJump = true;
 
 					}
+					
 
 					controls.getObject().translateX( velocity.x * delta );
 					controls.getObject().translateY( velocity.y * delta );
