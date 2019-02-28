@@ -93,8 +93,24 @@
 			var color = new THREE.Color();
 
 			var testGeometry = new THREE.BoxBufferGeometry(4,4,4);
-			var testMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, specular:0xffffff, wireframe: true, side: THREE.DoubleSide })
-			var testMaterial2 = new THREE.MeshPhongMaterial({ color: 0xffffff, specular:0xffffff, side: THREE.DoubleSide })
+			var testMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff, specular:0x0000ff, wireframe: true })
+
+			var textureLoader = new THREE.TextureLoader();
+			
+			textureLoader.load( 'textures/crate.gif', function ( map ) {
+				testMaterial2.map = map; 
+			});
+
+			textureLoader.load( "textures/hardwood2_diffuse.jpg", function ( map ) {
+					map.wrapS = THREE.RepeatWrapping;
+					map.wrapT = THREE.RepeatWrapping;
+					map.anisotropy = 4;
+					map.repeat.set( 10, 24 );
+					floorMaterial.map = map;
+					// floorMaterial.needsUpdate = true;
+				} );
+
+			var testMaterial2 = new THREE.MeshPhongMaterial({ color: 0xffffff, specular:0xffffff })
 
 
 			var testBox = new THREE.Mesh(testGeometry, testMaterial);
@@ -104,9 +120,9 @@
 				{
 					var timer = Date.now() * 0.0001
 
-					testBox.rotation.x = -5 * timer;
+					testBox.rotation.x = 5 * timer;
 					testBox.rotation.y = 5 * timer; 
-					testBox2.rotation.x = -5 * timer;
+					testBox2.rotation.x = 5 * timer;
 					testBox2.rotation.y = 5 * timer; 
 					
 				}
@@ -128,6 +144,16 @@
 				var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
 				light.position.set( 0.5, 1, 0.75 );
 				scene.add( light );
+
+				var textureLoader = new THREE.TextureLoader();
+				textureLoader.load( "textures/hardwood2_diffuse.jpg", function ( map ) {
+					map.wrapS = THREE.RepeatWrapping;
+					map.wrapT = THREE.RepeatWrapping;
+					map.anisotropy = 4;
+					map.repeat.set( 10, 24 );
+					floorMaterial.map = map;
+					floorMaterial.needsUpdate = true;
+	} );
 
 				controls = new THREE.PointerLockControls( camera );
 
@@ -320,7 +346,7 @@
 				WelcomeScreen.rotateX( -Math.PI / 6);
 
 				testBox.position.set(-43, 9, -6);
-				testBox2.position.set(-43, 9, -15)
+				testBox2.position.set(-43, 9, -14)
 
 				DisplayBoxSquare.position.set(-44,3,-10)
 				DisplayBoxEffect1.position.set(56,3,-25) 
