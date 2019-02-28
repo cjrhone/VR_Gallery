@@ -92,10 +92,32 @@
 			var vertex = new THREE.Vector3();
 			var color = new THREE.Color();
 
+			var testGeometry = new THREE.BoxBufferGeometry(4,4,4);
+			var testMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, specular:0xffffff, wireframe: true, side: THREE.DoubleSide })
+			var testMaterial2 = new THREE.MeshPhongMaterial({ color: 0xffffff, specular:0xffffff, side: THREE.DoubleSide })
+
+
+			var testBox = new THREE.Mesh(testGeometry, testMaterial);
+			var testBox2 = new THREE.Mesh(testGeometry, testMaterial2);
+
+			var update = function () 
+				{
+					var timer = Date.now() * 0.0001
+
+					testBox.rotation.x = -5 * timer;
+					testBox.rotation.y = 5 * timer; 
+					testBox2.rotation.x = -5 * timer;
+					testBox2.rotation.y = 5 * timer; 
+					
+				}
+
+
 			init();
 			animate();
+			
 
 			function init() {
+
 
 				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
 
@@ -205,36 +227,6 @@
 				var floorGeometry = new THREE.PlaneBufferGeometry( 300, 300, 50, 50 );
 				floorGeometry.rotateX( - Math.PI / 2 );
 
-				// vertex displacement
-
-				// var position = floorGeometry.attributes.position;
-
-				// for ( var i = 0, l = position.count; i < l; i ++ ) {
-
-				// 	vertex.fromBufferAttribute( position, i );
-
-				// 	vertex.x += Math.random() * 20 - 10;
-				// 	vertex.y += Math.random() * 2;
-				// 	vertex.z += Math.random() * 20 - 10;
-
-				// 	position.setXYZ( i, vertex.x, vertex.y, vertex.z );
-
-				// }
-
-				// floorGeometry = floorGeometry.toNonIndexed(); // ensure each face has unique vertices
-
-				// position = floorGeometry.attributes.position;
-				// var colors = [];
-
-				// for ( var i = 0, l = position.count; i < l; i ++ ) {
-
-				// 	color.setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-				// 	colors.push( color.r, color.g, color.b );
-
-				// }
-
-				// floorGeometry.addAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
-
 				// EXPERIMENTAL FUNCTIONS
 				var timer = Date.now() * 0.0001
 
@@ -259,11 +251,6 @@
 
 				var screenGeometry = new THREE.BoxBufferGeometry( 8, 4.5, 0.5);
 				var boxGeometry = new THREE.BoxBufferGeometry( 10, 5, 15);
-
-
-				
-
-
 
 
 				// CREATE MATERIALS
@@ -305,12 +292,6 @@
 				var DisplayBoxCloth = new THREE.Mesh( boxGeometry, boxMaterial );
 
 
-				
-
-
-
-
-
 				// REPOSITION
 
 				S_Wall.position.set(0,10,50);
@@ -338,6 +319,9 @@
 				WelcomeScreen.position.set(15,8,-20);
 				WelcomeScreen.rotateX( -Math.PI / 6);
 
+				testBox.position.set(-43, 9, -6);
+				testBox2.position.set(-43, 9, -15)
+
 				DisplayBoxSquare.position.set(-44,3,-10)
 				DisplayBoxEffect1.position.set(56,3,-25) 
 				DisplayBoxEffect2.position.set(144,3,-80)
@@ -349,12 +333,6 @@
 				DisplayBoxCloth.position.set(-100, 3, 44)
 				DisplayBoxCloth.rotateY( - Math.PI / 2); 
 
-			
-
-
-
-
-
 				// SCENE ADD
 				
 				scene.add(DisplayBoxSquare);
@@ -365,8 +343,6 @@
 				scene.add(DisplayBoxMorph);
 				scene.add(DisplayBoxSit);
 				scene.add(DisplayBoxCloth);
-
-
 
 				scene.add( floor );
 				scene.add( S_Wall );
@@ -382,70 +358,14 @@
 				scene.add( Ceiling );
 				scene.add( Cylinder );
 				scene.add( WelcomeScreen );
+				scene.add(testBox)
+				scene.add(testBox2)
 
-
-
-				
-
-
-
-
-
-
-				// ARRAY OF OBJECTS
-
-				// var boxGeometry = new THREE.BoxBufferGeometry( 20, 20, 20 );
-				// boxGeometry = boxGeometry.toNonIndexed(); // ensure each face has unique vertices
-
-				// var boxGeometry2 = new THREE.BoxBufferGeometry( 50, 50, 50 )
-
-				// var boxMaterial2 = new THREE.MeshPhongMaterial( {specular: 0xFF0000, flatShading: true, vertexColors: THREE.VertexColors} )
-				// boxMaterial2.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-
-				// var box2 = new THREE.Mesh( boxGeometry2, boxMaterial2 );
-
-				// scene.add(box2);
-				// objects.push(box2);
-
-				// position = boxGeometry.attributes.position;
-				// colors = [];
-
-				// for ( var i = 0, l = position.count; i < l; i ++ ) {
-
-				// 	color.setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-				// 	colors.push( color.r, color.g, color.b );
-
-				// }
-
-				// boxGeometry.addAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
-				// boxGeometry2.addAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
-
-				// for ( var i = 0; i < 100; i ++ ) {
-
-				// 	var boxMaterial = new THREE.MeshPhongMaterial( { specular: 0xffffff, flatShading: true, vertexColors: THREE.VertexColors } );
-				// 	boxMaterial.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-
-					// var boxMaterial2 = new THREE.MeshPhongMaterial( {specular: 0xFF0000, flatShading: true, vertexColors: THREE.VertexColors} )
-					// boxMaterial2.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-
-					// var box = new THREE.Mesh( boxGeometry, boxMaterial );
-					// var box2 = new THREE.Mesh( boxGeometry2, boxMaterial2 );
-					// box.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
-					// box.position.y = Math.floor( Math.random() * 20 ) * 20 + 10;
-					// box.position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
-
-					// box2.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
-					// box2.position.y = Math.floor( Math.random() * 20 ) * 20 + 10;
-					// box2.position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
-
-					// scene.add( box );
-					// scene.add( box2 );
-					// objects.push( box );
-					// objects.push( box2 );
-
-				// }
-
-				// END OF OBJECTS ARRAY
+				function update() 
+			{
+				WelcomeScreen.rotation.x += 0.01;
+				WelcomeScreen.rotation.y += 0.0005;
+			}
 
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
 				renderer.setPixelRatio( window.devicePixelRatio );
@@ -456,7 +376,6 @@
 
 				window.addEventListener( 'resize', onWindowResize, false );
 
-				
 
 			}
 
@@ -469,9 +388,13 @@
 
 			}
 
+
 			function animate() {
 
 				requestAnimationFrame( animate );
+
+				update();
+				
 
 				if ( controls.isLocked === true ) {
 
