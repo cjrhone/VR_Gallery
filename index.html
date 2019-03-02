@@ -60,6 +60,65 @@
 	</head>
 	<body>
 		<script src="build/three.js"></script>
+		<script src='js/libs/dat.gui.min.js'></script>
+		<script src="js/libs/stats.min.js"></script>
+		<script src="js/loaders/GLTFLoader.js"></script>
+		<script src="js/WebGL.js"></script>
+		<script id="vs" type="x-shader/x-vertex">
+
+			uniform sampler2D map;
+
+			uniform float width;
+			uniform float height;
+			uniform float nearClipping, farClipping;
+
+			uniform float pointSize;
+			uniform float zOffset;
+
+			varying vec2 vUv;
+
+			const float XtoZ = 1.11146; // tan( 1.0144686 / 2.0 ) * 2.0;
+			const float YtoZ = 0.83359; // tan( 0.7898090 / 2.0 ) * 2.0;
+
+			void main() {
+
+				vUv = vec2( position.x / width, position.y / height );
+
+				vec4 color = texture2D( map, vUv );
+				float depth = ( color.r + color.g + color.b ) / 3.0;
+
+				// Projection code by @kcmic
+
+				float z = ( 1.0 - depth ) * (farClipping - nearClipping) + nearClipping;
+
+				vec4 pos = vec4(
+					( position.x / width - 0.5 ) * z * XtoZ,
+					( position.y / height - 0.5 ) * z * YtoZ,
+					- z + zOffset,
+					1.0);
+
+				gl_PointSize = pointSize;
+				gl_Position = projectionMatrix * modelViewMatrix * pos;
+
+			}
+
+		</script>
+
+		<script id="fs" type="x-shader/x-fragment">
+
+			uniform sampler2D map;
+
+			varying vec2 vUv;
+
+			void main() {
+
+				vec4 color = texture2D( map, vUv );
+				gl_FragColor = vec4( color.r, color.g, color.b, 0.2 );
+
+			}
+
+		</script>
+		
 		<script src="js/controls/PointerLockControls.js"></script>
 
 		<div id="blocker">
@@ -95,20 +154,13 @@
 			var testGeometry = new THREE.BoxBufferGeometry(4,4,4);
 			var testMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff, specular:0x0000ff, wireframe: true })
 
+			// We're defining textureLoader to load textures, and then changing each texture with certain parameters to fit the designated material 
 			var textureLoader = new THREE.TextureLoader();
 			
 			textureLoader.load( 'textures/crate.gif', function ( map ) {
 				testMaterial2.map = map; 
 			});
 
-			textureLoader.load( "textures/hardwood2_diffuse.jpg", function ( map ) {
-					map.wrapS = THREE.RepeatWrapping;
-					map.wrapT = THREE.RepeatWrapping;
-					map.anisotropy = 4;
-					map.repeat.set( 10, 24 );
-					floorMaterial.map = map;
-					// floorMaterial.needsUpdate = true;
-				} );
 
 			var testMaterial2 = new THREE.MeshPhongMaterial({ color: 0xffffff, specular:0xffffff })
 
@@ -120,12 +172,22 @@
 				{
 					var timer = Date.now() * 0.0001
 
+					//Animate Square Display
 					testBox.rotation.x = 5 * timer;
 					testBox.rotation.y = 5 * timer; 
 					testBox2.rotation.x = 5 * timer;
 					testBox2.rotation.y = 5 * timer; 
-					
-				}
+
+					//Animate Morph Ball 
+			// 		if ( mesh !== undefined ) {
+			// 		mesh.rotation.y += 0.01;
+			// 		mesh.morphTargetInfluences[ 1 ] = mesh.morphTargetInfluences[ 1 ] + 0.01 * sign;
+			// 		if ( mesh.morphTargetInfluences[ 1 ] <= 0 || mesh.morphTargetInfluences[ 1 ] >= 1 ) {
+			// 			sign *= - 1;
+
+			// 		}
+			// 	}		
+			}
 
 
 			init();
@@ -153,7 +215,109 @@
 					map.repeat.set( 10, 24 );
 					floorMaterial.map = map;
 					floorMaterial.needsUpdate = true;
-	} );
+				} );
+
+				// Mesh Attempt
+				// var mesh;
+
+				// var loader = new THREE.GLTFLoader();
+				// loader.load( 'models/gltf/AnimatedMorphSphere/glTF/AnimatedMorphSphere.gltf', function ( gltf ) {
+
+				// 	gltf.scene.traverse( function ( node ) {
+
+				// 		if ( node.isMesh ) mesh = node;
+
+				// 	} );
+
+				// 	mesh.material.morphTargets = true;
+				// 	mesh.rotation.z = Math.PI / 2;
+
+				// 	// mesh.material.visible = false;
+
+				// 	scene.add( mesh );
+
+				// 	//
+				// 	var pointsMaterial = new THREE.PointsMaterial( {
+				// 		size: 10,
+				// 		sizeAttenuation: false,
+				// 		map: new THREE.TextureLoader().load( 'textures/sprites/disc.png' ),
+				// 		alphaTest: 0.5,
+				// 		morphTargets: true
+
+				// 	} );
+
+				// 	var points = new THREE.Points( mesh.geometry, pointsMaterial );
+				// 	points.morphTargetInfluences = mesh.morphTargetInfluences;
+				// 	points.morphTargetDictionary = mesh.morphTargetDictionary;
+				// 	mesh.add( points );
+
+				// } );
+
+					//KINECT ATTEMPT
+					video = document.createElement( 'video' );
+						video.addEventListener( 'loadedmetadata', function () {
+
+						texture = new THREE.VideoTexture( video );
+						texture.minFilter = THREE.NearestFilter;
+
+						var width = 640, height = 480;
+						var nearClipping = 850, farClipping = 4000;
+
+						geometry = new THREE.BufferGeometry();
+
+						var vertices = new Float32Array( width * height * 3 );
+
+						for ( var i = 0, j = 0, l = vertices.length; i < l; i += 3, j ++ ) {
+
+							vertices[ i ] = j % width;
+							vertices[ i + 1 ] = Math.floor( j / width );
+
+						}
+
+						geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+
+						material = new THREE.ShaderMaterial( {
+
+							uniforms: {
+
+								"map": { value: texture },
+								"width": { value: width },
+								"height": { value: height },
+								"nearClipping": { value: nearClipping },
+								"farClipping": { value: farClipping },
+
+								"pointSize": { value: 2 },
+								"zOffset": { value: 1000 }
+
+							},
+							vertexShader: document.getElementById( 'vs' ).textContent,
+							fragmentShader: document.getElementById( 'fs' ).textContent,
+							blending: THREE.AdditiveBlending,
+							depthTest: false, depthWrite: false,
+							transparent: true
+
+						} );
+
+						kinectMesh = new THREE.Points( geometry, material );
+						kinectMesh.position.set(15,8,-20);
+						scene.add( kinectMesh );
+
+						var gui = new dat.GUI();
+						gui.add( material.uniforms.nearClipping, 'value', 1, 10000, 1.0 ).name( 'nearClipping' );
+						gui.add( material.uniforms.farClipping, 'value', 1, 10000, 1.0 ).name( 'farClipping' );
+						gui.add( material.uniforms.pointSize, 'value', 1, 10, 1.0 ).name( 'pointSize' );
+						gui.add( material.uniforms.zOffset, 'value', 0, 4000, 1.0 ).name( 'zOffset' );
+						gui.close();
+
+
+					}, false );
+					video.crossOrigin = 'anonymous';
+					video.loop = true;
+					video.muted = true;
+					video.src = 'textures/kinect.webm';
+					video.setAttribute( 'webkit-playsinline', 'webkit-playsinline' );
+					video.play();
+					//END KINECT ATTEMPT
 
 				controls = new THREE.PointerLockControls( camera );
 
