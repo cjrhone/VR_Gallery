@@ -63,6 +63,8 @@
 		<script src='js/libs/dat.gui.min.js'></script>
 		<script src="js/libs/stats.min.js"></script>
 		<script src="js/loaders/GLTFLoader.js"></script>
+		<script src="js/Cloth.js"></script>
+		<script src="js/vr/WebVR.js"></script>
 		<script src="js/WebGL.js"></script>
 		<script id="vs" type="x-shader/x-vertex">
 
@@ -195,6 +197,7 @@
 			
 
 			function init() {
+				
 
 
 				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
@@ -207,6 +210,9 @@
 				light.position.set( 0.5, 1, 0.75 );
 				scene.add( light );
 
+				//create webvr button
+				document.body.appendChild( WEBVR.createButton( renderer ) );
+
 				var textureLoader = new THREE.TextureLoader();
 				textureLoader.load( "textures/hardwood2_diffuse.jpg", function ( map ) {
 					map.wrapS = THREE.RepeatWrapping;
@@ -215,6 +221,32 @@
 					map.repeat.set( 10, 24 );
 					floorMaterial.map = map;
 					floorMaterial.needsUpdate = true;
+				} );
+
+				//Cloth Attempt
+				
+				// cloth material
+				var loader = new THREE.TextureLoader();
+				var clothTexture = loader.load( 'textures/patterns/circuit_pattern.png' );
+				clothTexture.anisotropy = 16;
+				var clothMaterial = new THREE.MeshLambertMaterial( {
+					map: clothTexture,
+					side: THREE.DoubleSide,
+					alphaTest: 0.5
+				} );
+
+				// cloth geometry
+				clothGeometry = new THREE.ParametricBufferGeometry( clothFunction, cloth.w, cloth.h );
+
+				// cloth mesh
+				object = new THREE.Mesh( clothGeometry, clothMaterial );
+				object.position.set( 0, -40, 0 );
+				object.castShadow = true;
+				scene.add( object );
+				object.customDepthMaterial = new THREE.MeshDepthMaterial( {
+					depthPacking: THREE.RGBADepthPacking,
+					map: clothTexture,
+					alphaTest: 0.5
 				} );
 
 				// Mesh Attempt
@@ -254,69 +286,70 @@
 				// } );
 
 					//KINECT ATTEMPT
-					video = document.createElement( 'video' );
-						video.addEventListener( 'loadedmetadata', function () {
+					// video = document.createElement( 'video' );
+					// 	video.addEventListener( 'loadedmetadata', function () {
 
-						texture = new THREE.VideoTexture( video );
-						texture.minFilter = THREE.NearestFilter;
+					// 	texture = new THREE.VideoTexture( video );
+					// 	// texture.minFilter = THREE.NearestFilter;
 
-						var width = 640, height = 480;
-						var nearClipping = 850, farClipping = 4000;
+					// 	var width = 640, height = 480;
+					// 	var nearClipping = 850, farClipping = 4000;
 
-						geometry = new THREE.BufferGeometry();
+					// 	geometry = new THREE.BufferGeometry();
 
-						var vertices = new Float32Array( width * height * 3 );
+					// 	var vertices = new Float32Array( width * height * 3 );
 
-						for ( var i = 0, j = 0, l = vertices.length; i < l; i += 3, j ++ ) {
+					// 	for ( var i = 0, j = 0, l = vertices.length; i < l; i += 3, j ++ ) {
 
-							vertices[ i ] = j % width;
-							vertices[ i + 1 ] = Math.floor( j / width );
+					// 		vertices[ i ] = j % width;
+					// 		vertices[ i + 1 ] = Math.floor( j / width );
 
-						}
+					// 	}
 
-						geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+					// 	geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
 
-						material = new THREE.ShaderMaterial( {
+					// 	material = new THREE.ShaderMaterial( {
 
-							uniforms: {
+					// 		uniforms: {
 
-								"map": { value: texture },
-								"width": { value: width },
-								"height": { value: height },
-								"nearClipping": { value: nearClipping },
-								"farClipping": { value: farClipping },
+					// 			"map": { value: texture },
+					// 			"width": { value: width },
+					// 			"height": { value: height },
+					// 			"nearClipping": { value: nearClipping },
+					// 			"farClipping": { value: farClipping },
 
-								"pointSize": { value: 2 },
-								"zOffset": { value: 1000 }
+					// 			"pointSize": { value: 2 },
+					// 			"zOffset": { value: 1000 }
 
-							},
-							vertexShader: document.getElementById( 'vs' ).textContent,
-							fragmentShader: document.getElementById( 'fs' ).textContent,
-							blending: THREE.AdditiveBlending,
-							depthTest: false, depthWrite: false,
-							transparent: true
+					// 		},
+					// 		vertexShader: document.getElementById( 'vs' ).textContent,
+					// 		fragmentShader: document.getElementById( 'fs' ).textContent,
+					// 		blending: THREE.AdditiveBlending,
+					// 		depthTest: false, depthWrite: false,
+					// 		transparent: true
 
-						} );
+					// 	} );
 
-						kinectMesh = new THREE.Points( geometry, material );
-						kinectMesh.position.set(15,8,-20);
-						scene.add( kinectMesh );
+					// 	kinectMesh = new THREE.Points( geometry, material );
+					// 	kinectMesh.position.set(15,8,-20)
+					// 	kinectMesh.rotateY( -Math.PI / 2);
+					// 	scene.add( kinectMesh );
 
-						var gui = new dat.GUI();
-						gui.add( material.uniforms.nearClipping, 'value', 1, 10000, 1.0 ).name( 'nearClipping' );
-						gui.add( material.uniforms.farClipping, 'value', 1, 10000, 1.0 ).name( 'farClipping' );
-						gui.add( material.uniforms.pointSize, 'value', 1, 10, 1.0 ).name( 'pointSize' );
-						gui.add( material.uniforms.zOffset, 'value', 0, 4000, 1.0 ).name( 'zOffset' );
-						gui.close();
+					// 	var gui = new dat.GUI();
+					// 	gui.add( material.uniforms.nearClipping, 'value', 1, 10000, 1.0 ).name( 'nearClipping' );
+					// 	gui.add( material.uniforms.farClipping, 'value', 1, 10000, 1.0 ).name( 'farClipping' );
+					// 	gui.add( material.uniforms.pointSize, 'value', 1, 10, 1.0 ).name( 'pointSize' );
+					// 	gui.add( material.uniforms.zOffset, 'value', 0, 4000, 1.0 ).name( 'zOffset' );
+					// 	gui.close();
 
 
-					}, false );
-					video.crossOrigin = 'anonymous';
-					video.loop = true;
-					video.muted = true;
-					video.src = 'textures/kinect.webm';
-					video.setAttribute( 'webkit-playsinline', 'webkit-playsinline' );
-					video.play();
+					// }, false );
+					// video.crossOrigin = 'anonymous';
+					// video.loop = true;
+					// video.muted = true;
+					// video.src = 'textures/kinect.webm';
+					// video.setAttribute( 'webkit-playsinline', 'webkit-playsinline' );
+					// video.play();
 					//END KINECT ATTEMPT
 
 				controls = new THREE.PointerLockControls( camera );
@@ -560,6 +593,7 @@
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.vr.enabled = true;
 				document.body.appendChild( renderer.domElement );
 
 				//
@@ -582,6 +616,7 @@
 			function animate() {
 
 				requestAnimationFrame( animate );
+				// setAnimationLoop( animate );
 
 				update();
 				

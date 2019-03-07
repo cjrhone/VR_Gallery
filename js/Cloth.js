@@ -131,6 +131,7 @@ function Cloth( w, h ) {
 	var constraints = [];
 
 	var u, v;
+	
 
 	// Create particles
 	for ( v = 0; v <= h; v ++ ) {
