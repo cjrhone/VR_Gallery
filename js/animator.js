@@ -6,7 +6,8 @@ var update = function ()
 					testBox.rotation.x = 5 * timer;
 					testBox.rotation.y = 5 * timer; 
 					testBox2.rotation.x = 5 * timer;
-					testBox2.rotation.y = 5 * timer; 
+                    testBox2.rotation.y = 5 * timer; 
+                    
 
                 }
             
