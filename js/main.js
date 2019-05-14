@@ -21,6 +21,7 @@ var camera, scene, renderer, controls;
             scene.background = new THREE.Color( 0x000000 );
             scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
 
+            //LEE PERRY SMITH MODEL
             loadLeePerrySmith();
 
             function loadLeePerrySmith() {
@@ -40,3 +41,4 @@ var camera, scene, renderer, controls;
                     mesh.rotateY( - Math.PI / 1)
                 } );
             }
+            //END LEE PERRY SMITH MODEL
